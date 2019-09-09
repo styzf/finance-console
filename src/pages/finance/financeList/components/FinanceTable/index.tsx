@@ -52,23 +52,20 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
     title: '财务分类',
     width: 100,
     dataIndex: 'categoryName',
-    key: 'categoryName',
     fixed: 'left',
   },
   {
     title: '财务子分类',
     width: 100,
     dataIndex: 'childCategoryName',
-    key: 'childCategoryName',
     fixed: 'left',
   }];
 
   rightColumn :FinanceTableColumnProps[] = [{
-    title: 'Action',
-    key: 'categoryId',
+    title: '涨幅汇总数据',
     fixed: 'right',
     width: 100,
-    render: () => <a>action</a>,
+    dataIndex: 'sum',
   }];
 
   /**

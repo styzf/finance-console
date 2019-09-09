@@ -11,7 +11,7 @@ interface FinanceFormProps extends FormComponentProps {
   day : number;
   categoryId : string;
   onPressEnterCallBack: (params:UpdateFinanceParams) => void;
-  disabled : boolean;
+  disabled ?: boolean;
 }
 
 const FinanceForm: React.FC<FinanceFormProps> = props => {

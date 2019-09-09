@@ -28,7 +28,86 @@ export interface ModelType {
   };
 }
 
+const pushData = (list:Array<FinanceTableListItem> ,
+                  categoryId:string, categoryName:string, childCategoryName:string,
+                  map: Map<string, number>, disabled:boolean = false) => {
+  list.push({
+    categoryId:categoryId,
+    categoryName: categoryName,
+    childCategoryName: childCategoryName,
+    disabled:disabled,
+    1:map.get('1'),
+    2:map.get('2'),
+    3:map.get('3'),
+    4:map.get('4'),
+    5:map.get('5'),
+    6:map.get('6'),
+    7:map.get('7'),
+    8:map.get('8'),
+    9:map.get('9'),
+    10:map.get('10'),
+    11:map.get('11'),
+    12:map.get('12'),
+    13:map.get('13'),
+    14:map.get('14'),
+    15:map.get('15'),
+    16:map.get('16'),
+    17:map.get('17'),
+    18:map.get('18'),
+    19:map.get('19'),
+    20:map.get('20'),
+    21:map.get('21'),
+    22:map.get('22'),
+    23:map.get('23'),
+    24:map.get('24'),
+    25:map.get('25'),
+    26:map.get('26'),
+    27:map.get('27'),
+    28:map.get('28'),
+    29:map.get('29'),
+    30:map.get('30'),
+    31:map.get('31'),
+    sum: map.get('sum'),
+  });
+}
 
+const sumFinance = (total:Map<string, number>, data:Map<string, number>) => {
+  for (let i = 0; i < 31; i++) {
+    let key = i + 1 + '';
+    let dataValue= data.get(key);
+    if (dataValue && dataValue > 0) {
+      // @ts-ignore
+      let value = total.get(key)?total.get(key):0 + dataValue;
+      // @ts-ignore
+      total.set(key, value);
+    }
+  }
+}
+
+let differenceKey = 0;
+
+// 计算差值
+const difference = (total:Map<string, number>, list:Array<FinanceTableListItem>,
+                    child:boolean = true) => {
+  let difference = new Map<string, number>();
+
+  let previous = 0;
+  let sum = 0;
+  for (let i = 0; i < 31; i++) {
+    let key = i + 1 + '';
+    let value = total.get(key);
+    if (!value) {
+      previous = 0;
+      continue;
+    }
+    difference.set(key, value - previous);
+    sum += value - previous;
+    previous = value;
+  }
+  difference.set('sum', sum);
+  pushData(list, 'difference' + (differenceKey++),
+    !child?'差值':'',child?'差值':'',difference, true);
+}
 
 const Model: ModelType = {
   namespace: 'financeTableList',
@@ -42,65 +121,50 @@ const Model: ModelType = {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryFinance, payload);
-
+      // 还需要获取最后一天的数据
       let dataList = new Array<FinanceListData>()
       let list = new Array<FinanceTableListItem>();
       dataList = response.data;
 
+      // 总值的统计
       let total = new Map<string,number>();
+      // 每个子类进行汇总
       let childTotal = new Map<string,number>();
+      // 是否到了要显示汇总信息的行标识
+      let flag = false;
+      let key = 0;
 
       dataList.forEach(data => {
-        let map = new Map<string, string>();
+        let map = new Map<string, number>();
         let categoryName = '';
         let childCategoryName = '';
+
+        data.data.forEach(finance =>
+          map.set(finance.day.toString(),finance.money));
+
         if (data.child) {
           childCategoryName = data.name;
-        } else {
+          flag = true;
+          sumFinance(childTotal, map);
+        } else  {
+          if (flag) {
+            flag = false;
+            childCategoryName = '子分类汇总';
+            pushData(list, (key++) + '', categoryName, childCategoryName, childTotal, true);
+            difference(childTotal,list);
+            childTotal = new Map<string,number>();
+          }
+
           categoryName = data.name;
+          childCategoryName = '';
+          sumFinance(total, map);
         }
 
-        data.data.forEach(finance => {
-          map.set(finance.day.toString(),finance.money);
-        });
-
-        list.push({
-          categoryId:data.id,
-          categoryName: categoryName,
-          childCategoryName: childCategoryName,
-          1:map.get('1'),
-          2:map.get('2'),
-          3:map.get('3'),
-          4:map.get('4'),
-          5:map.get('5'),
-          6:map.get('6'),
-          7:map.get('7'),
-          8:map.get('8'),
-          9:map.get('9'),
-          10:map.get('10'),
-          11:map.get('11'),
-          12:map.get('12'),
-          13:map.get('13'),
-          14:map.get('14'),
-          15:map.get('15'),
-          16:map.get('16'),
-          17:map.get('17'),
-          18:map.get('18'),
-          19:map.get('19'),
-          20:map.get('20'),
-          21:map.get('21'),
-          22:map.get('22'),
-          23:map.get('23'),
-          24:map.get('24'),
-          25:map.get('25'),
-          26:map.get('26'),
-          27:map.get('27'),
-          28:map.get('28'),
-          29:map.get('29'),
-          30:map.get('30'),
-          31:map.get('31'),
-        });
+        pushData(list, data.id, categoryName, childCategoryName,map);
       });
+      pushData(list, 'total',
+        '汇总', '', total, true);
+      difference(childTotal,list,true);
 
       yield put({
         type: 'save',
