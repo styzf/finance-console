@@ -268,13 +268,14 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     });
   };
 
-  handleAdd = (fields: { name: string, parentId: number }) => {
+  handleAdd = (fields: { name: string, parentId: number , categoryKey:string}) => {
     const { dispatch } = this.props;
     dispatch({
       type: namespace + '/add',
       payload: {
         name: fields.name,
         parentId: fields.parentId,
+        categoryKey: fields.categoryKey,
       },
       callback: () => {
         this.handleInit();
@@ -285,7 +286,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     this.handleModalVisible();
   };
 
-  handleUpdate = (fields: { name: string, parentId: number }) => {
+  handleUpdate = (fields: { name: string, parentId: number, categoryKey:string, }) => {
     const { dispatch } = this.props;
     const { updateId} = this.state;
     if (!updateId) {
@@ -297,6 +298,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
       payload: {
         name: fields.name,
         parentId: fields.parentId,
+        categoryKey: fields.categoryKey,
         id : updateId,
       },
       callback: () => {

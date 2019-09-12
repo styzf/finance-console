@@ -1,8 +1,8 @@
-import { Table,DatePicker } from 'antd';
+import {Table, DatePicker, Tooltip, Icon, Button} from 'antd';
 import { ColumnProps, TableProps } from 'antd/es/table';
 import React, {Component} from 'react';
 
-import {FinanceTableListItem, UpdateFinanceParams} from '../../data.d';
+import {FinanceTableListItem, UpdateFinanceParams, UpdateFinanceRemarkParams} from '../../data.d';
 import styles from './index.less';
 import {Moment} from "moment";
 import FinanceForm from '../FinanceForm';
@@ -13,11 +13,10 @@ export interface FinanceTableProps<T> extends Omit<TableProps<T>, 'columns'> {
   data: {
     list: FinanceTableListItem[];
   };
-  selectedRows: FinanceTableListItem[];
-  onSelectRow: (rows: any) => void;
   initData: (year: number,month: number) => void;
   // 每个单元格按下确认后的回调函数
   onPressEnterCallBack: (params:UpdateFinanceParams) => void;
+  updateRemarkModalVisible: (flag?: boolean, params?: UpdateFinanceRemarkParams) => void;
 }
 
 export interface FinanceTableColumnProps extends ColumnProps<FinanceTableListItem>{}
@@ -28,15 +27,6 @@ interface FinanceTableState {
 }
 
 class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, FinanceTableState> {
-  static getDerivedStateFromProps(nextProps: FinanceTableProps<FinanceTableListItem>) {
-    // clean state
-    if (nextProps.selectedRows.length === 0) {
-      return {
-        selectedRowKeys: [],
-      };
-    }
-    return null;
-  }
 
   // 构建的时候就要把columns给创建出来
   constructor(props: FinanceTableProps<FinanceTableListItem>) {
@@ -66,6 +56,12 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
     fixed: 'right',
     width: 100,
     dataIndex: 'sum',
+    render: (text, record, index) => {
+      if (text) {
+        return text.money;
+      }
+      return "";
+    }
   }];
 
   /**
@@ -75,7 +71,7 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
    * @param month
    */
   initColumns = (year:number , month:number) => {
-    const {onPressEnterCallBack} = this.props;
+    const {onPressEnterCallBack, updateRemarkModalVisible} = this.props;
     let lastDay = new Date(year, month, 0).getDate();
     let colList =  new Array<FinanceTableColumnProps>();
     colList.push(...this.leftColumn);
@@ -85,7 +81,7 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
         title: year + '年' + month + '月' + (i + 1) +'日',
         dataIndex: i + 1 + '',
         key: i + 1 + '' ,
-        width: 150,
+        width: 200,
         /**
          * 返回一个输入框
          * @param text 值
@@ -93,14 +89,61 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
          * @param index 第几行
          */
         render: (text, record, index) => {
-          return (<FinanceForm year={year}
+          let x = 0;
+          let y = 0;
+          let money = 0;
+          let remark = '';
+          if (record[i+1] && record[i+1].money) {
+            x = record[i+1].money;
+          }
+          if (record[i] && record[i].money) {
+            y = record[i].money;
+          }
+          if (text) {
+            money = text.money;
+            remark = text.remark;
+          }
+          if (record.disabled) {
+            return (<div style={{width:'250px'}}>
+                <div style={{width:'150px',float:'left'}}>
+                  <FinanceForm year={year}
                                month={month}
                                day={i + 1}
                                categoryId={record.categoryId}
-                               text={text}
+                               text={money}
                                onPressEnterCallBack={onPressEnterCallBack}
                                disabled={record.disabled}
-                      />);
+                  />
+                </div>
+              </div>
+              );
+          }
+
+          const params:UpdateFinanceRemarkParams = {year: year,
+            month:month, day: i+1 ,categoryId: record.categoryId, remark: remark};
+
+          return (<div style={{width:'250px'}}>
+                    <div style={{width:'150px',float:'left'}}>
+                      <FinanceForm year={year}
+                                   month={month}
+                                   day={i + 1}
+                                   categoryId={record.categoryId}
+                                   text={money}
+                                   onPressEnterCallBack={onPressEnterCallBack}
+                                   disabled={record.disabled}
+                      />
+                    </div>
+
+                    <div className={styles.iconDiv}>
+                        <Tooltip title={x - y} >
+                          <Icon type="info-circle" style={{margin : '0px 0px 0px 10px'}}/>
+                        </Tooltip>
+                        <Tooltip title={remark}>
+                          <Button icon={'plus-circle'} shape="circle" type={"link"} size={"small"}
+                                  onClick={() => updateRemarkModalVisible(true, params)}/>
+                        </Tooltip>
+                    </div>
+                  </div>);
           }
         });
     }
@@ -108,6 +151,13 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
     colList.push(...this.rightColumn);
     return colList;
   };
+
+  onClickUpdateRemark = () => {
+    const {
+      updateRemarkModalVisible,
+    } = this.props;
+    updateRemarkModalVisible(true, {});
+  }
 
   onChange = (date:Moment | null, dateString:string) => {
     if (!date) {

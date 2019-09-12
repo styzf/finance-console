@@ -3,38 +3,38 @@ export interface FinanceTableListItem {
   categoryName?: string;
   childCategoryName?: string;
   disabled?: boolean | false;
-  sum?: number;
-  1?: number;
-  2?: number;
-  3?: number;
-  4?: number;
-  5?: number;
-  6?: number;
-  7?: number;
-  8?: number;
-  9?: number;
-  10?: number;
-  11?: number;
-  12?: number;
-  13?: number;
-  14?: number;
-  15?: number;
-  16?: number;
-  17?: number;
-  18?: number;
-  19?: number;
-  20?: number;
-  21?: number;
-  22?: number;
-  23?: number;
-  24?: number;
-  25?: number;
-  26?: number;
-  27?: number;
-  28?: number;
-  29?: number;
-  30?: number;
-  31?: number;
+  sum?: FinanceData;
+  1?: FinanceData;
+  2?: FinanceData;
+  3?: FinanceData;
+  4?: FinanceData;
+  5?: FinanceData;
+  6?: FinanceData;
+  7?: FinanceData;
+  8?: FinanceData;
+  9?: FinanceData;
+  10?: FinanceData;
+  11?: FinanceData;
+  12?: FinanceData;
+  13?: FinanceData;
+  14?: FinanceData;
+  15?: FinanceData;
+  16?: FinanceData;
+  17?: FinanceData;
+  18?: FinanceData;
+  19?: FinanceData;
+  20?: FinanceData;
+  21?: FinanceData;
+  22?: FinanceData;
+  23?: FinanceData;
+  24?: FinanceData;
+  25?: FinanceData;
+  26?: FinanceData;
+  27?: FinanceData;
+  28?: FinanceData;
+  29?: FinanceData;
+  30?: FinanceData;
+  31?: FinanceData;
 }
 
 export interface TableListPagination {
@@ -65,6 +65,13 @@ export interface UpdateFinanceParams {
   money: string;
 }
 
+export interface UpdateFinanceRemarkParams {
+  year?:number;
+  month?:number;
+  categoryId?:string;
+  day?:number;
+  remark?: string;
+}
 
 export interface FinanceListData {
   id:string;
@@ -74,9 +81,10 @@ export interface FinanceListData {
 }
 
 export interface FinanceData {
-  year:number;
-  month:number;
-  categoryId:number;
+  year?:number;
+  month?:number;
+  categoryId?:number;
   money:number;
-  day:number;
+  day?:number;
+  remark?: string;
 }

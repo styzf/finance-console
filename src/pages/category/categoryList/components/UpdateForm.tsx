@@ -9,7 +9,7 @@ const FormItem = Form.Item;
 
 interface UpdateFormProps extends FormComponentProps {
   updateModalVisible: boolean;
-  handleUpdate: (fieldsValue: { name: string, parentId: number }) => void;
+  handleUpdate: (fieldsValue: { name: string, parentId: number, categoryKey:string, }) => void;
   handleUpdateModalVisible: () => void;
   data: UpdateData;
   treeData: TreeNode[];
@@ -43,8 +43,13 @@ const CreateForm: React.FC<UpdateFormProps> = props => {
     >
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类名">
         {form.getFieldDecorator('name', {
-          rules: [{ required: true, message: '请输入至少两个个字符的规则描述！', min: 2 }],
+          rules: [{ required: true, message: '请输入至少两个字符的规则描述！', min: 2 }],
           initialValue:data.name,
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类关键key">
+        {form.getFieldDecorator('categoryKey', {
+          rules: [{ required: true, message: '请输入至少两个字符的关键key描述！', min: 2 }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类父id">

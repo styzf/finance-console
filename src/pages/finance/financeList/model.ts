@@ -2,7 +2,7 @@ import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { addRule, queryFinance, removeRule, updateFinance } from './service';
 
-import {FinanceTableListData, FinanceTableListItem, FinanceListData} from './data.d';
+import {FinanceTableListData, FinanceTableListItem, FinanceListData, FinanceData} from './data.d';
 
 export interface FinanceStateType {
   data: FinanceTableListData;
@@ -30,7 +30,7 @@ export interface ModelType {
 
 const pushData = (list:Array<FinanceTableListItem> ,
                   categoryId:string, categoryName:string, childCategoryName:string,
-                  map: Map<string, number>, disabled:boolean = false) => {
+                  map: Map<string, FinanceData>, disabled:boolean = false) => {
   list.push({
     categoryId:categoryId,
     categoryName: categoryName,
@@ -71,15 +71,21 @@ const pushData = (list:Array<FinanceTableListItem> ,
   });
 }
 
-const sumFinance = (total:Map<string, number>, data:Map<string, number>) => {
+const sumFinance = (total:Map<string, FinanceData>, data:Map<string, FinanceData>) => {
   for (let i = 0; i < 31; i++) {
     let key = i + 1 + '';
-    let dataValue= data.get(key);
-    if (dataValue && dataValue > 0) {
+    let value = data.get(key);
+
+    if (value) {
+      let dataValue= value.money;
+      let totalValue = dataValue;
+
       // @ts-ignore
-      let value = total.get(key)?total.get(key):0 + dataValue;
-      // @ts-ignore
-      total.set(key, value);
+      if (total.get(key) && total.get(key).money) {
+        // @ts-ignore
+        totalValue = total.get(key).money + totalValue;
+      }
+      total.set(key, {money:totalValue});
     }
   }
 }
@@ -87,9 +93,9 @@ const sumFinance = (total:Map<string, number>, data:Map<string, number>) => {
 let differenceKey = 0;
 
 // 计算差值
-const difference = (total:Map<string, number>, list:Array<FinanceTableListItem>,
+const difference = (total:Map<string, FinanceData>, list:Array<FinanceTableListItem>,
                     child:boolean = true) => {
-  let difference = new Map<string, number>();
+  let difference = new Map<string, FinanceData>();
 
   let previous = 0;
   let sum = 0;
@@ -100,11 +106,12 @@ const difference = (total:Map<string, number>, list:Array<FinanceTableListItem>,
       previous = 0;
       continue;
     }
-    difference.set(key, value - previous);
-    sum += value - previous;
-    previous = value;
+
+    difference.set(key, {money:(value.money - previous)});
+    sum += value.money - previous;
+    previous = value.money;
   }
-  difference.set('sum', sum);
+  difference.set('sum', {money:sum});
   pushData(list, 'difference' + (differenceKey++),
     !child?'差值':'',child?'差值':'',difference, true);
 }
@@ -127,41 +134,51 @@ const Model: ModelType = {
       dataList = response.data;
 
       // 总值的统计
-      let total = new Map<string,number>();
+      let total = new Map<string,FinanceData>();
       // 每个子类进行汇总
-      let childTotal = new Map<string,number>();
+      let childTotal = new Map<string,FinanceData>();
       // 是否到了要显示汇总信息的行标识
       let flag = false;
       let key = 0;
 
       dataList.forEach(data => {
-        let map = new Map<string, number>();
+        let map = new Map<string, FinanceData>();
         let categoryName = '';
         let childCategoryName = '';
 
         data.data.forEach(finance =>
-          map.set(finance.day.toString(),finance.money));
+          // @ts-ignore
+          map.set(finance.day.toString(),finance));
 
-        if (data.child) {
-          childCategoryName = data.name;
-          flag = true;
-          sumFinance(childTotal, map);
-        } else  {
-          if (flag) {
-            flag = false;
-            childCategoryName = '子分类汇总';
-            pushData(list, (key++) + '', categoryName, childCategoryName, childTotal, true);
-            difference(childTotal,list);
-            childTotal = new Map<string,number>();
+          if (data.child) {
+            childCategoryName = data.name;
+            flag = true;
+            sumFinance(childTotal, map);
+          } else  {
+            if (flag) {
+              flag = false;
+              childCategoryName = '子分类汇总';
+              pushData(list, (key++) + 'Total', categoryName, childCategoryName, childTotal, true);
+              difference(childTotal,list);
+              childTotal = new Map<string,FinanceData>();
+            }
+
+            categoryName = data.name;
+            childCategoryName = '';
+            sumFinance(total, map);
           }
 
-          categoryName = data.name;
-          childCategoryName = '';
-          sumFinance(total, map);
-        }
-
-        pushData(list, data.id, categoryName, childCategoryName,map);
+          pushData(list, data.id, categoryName, childCategoryName,map);
       });
+
+      if (flag) {
+        flag = false;
+        pushData(list, (key++) + 'Total', '',
+          '子分类汇总', childTotal, true);
+        difference(childTotal,list);
+        childTotal = new Map<string,FinanceData>();
+      }
+
       pushData(list, 'total',
         '汇总', '', total, true);
       difference(childTotal,list,true);

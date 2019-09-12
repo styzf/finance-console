@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 
 interface CreateFormProps extends FormComponentProps {
   modalVisible: boolean;
-  handleAdd: (fieldsValue: { name: string, parentId: number }) => void;
+  handleAdd: (fieldsValue: { name: string, parentId: number, categoryKey: string }) => void;
   handleModalVisible: () => void;
   treeData: TreeNode[];
 }
@@ -41,6 +41,11 @@ const CreateForm: React.FC<CreateFormProps> = props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类名">
         {form.getFieldDecorator('name', {
           rules: [{ required: true, message: '请输入至少两个个字符的规则描述！', min: 2 }],
+        })(<Input placeholder="请输入" />)}
+      </FormItem>
+      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类关键key">
+        {form.getFieldDecorator('categoryKey', {
+          rules: [{ required: true, message: '请输入至少两个个字符的关键key描述！', min: 2 }],
         })(<Input placeholder="请输入" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类父id">

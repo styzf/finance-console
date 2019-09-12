@@ -1,10 +1,6 @@
 import {
   Card,
-  Col,
   Form,
-  Input,
-  Row,
-  message,
 } from 'antd';
 import React, { Component } from 'react';
 
@@ -15,11 +11,17 @@ import { SorterResult } from 'antd/es/table';
 import { connect } from 'dva';
 import { FinanceStateType } from './model';
 import FinanceTable from './components/FinanceTable';
-import {FinanceTableListItem, TableListPagination, TableListParams, UpdateFinanceParams} from './data.d';
+import {
+  FinanceTableListItem,
+  TableListPagination,
+  TableListParams,
+  UpdateFinanceParams,
+  UpdateFinanceRemarkParams
+} from './data.d';
 
 import styles from './style.less';
+import FinanceUpdateForm from "@/pages/finance/financeList/components/FinanceUpdateForm";
 
-const FormItem = Form.Item;
 const getValue = (obj: { [x: string]: string[] }) =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -37,6 +39,7 @@ interface TableListState {
   selectedRows: FinanceTableListItem[];
   formValues: { [key: string]: string };
   stepFormValues: Partial<FinanceTableListItem>;
+  updateRemarkParams: UpdateFinanceRemarkParams;
 }
 
 @connect(
@@ -62,6 +65,7 @@ class TableList extends Component<TableListProps, TableListState> {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
+    updateRemarkParams: {},
   };
 
   componentDidMount() {
@@ -101,91 +105,6 @@ class TableList extends Component<TableListProps, TableListState> {
     });
   };
 
-  handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
-    dispatch({
-      type: 'financeTableList/fetch',
-      payload: {},
-    });
-  };
-
-  handleMenuClick = (e: { key: string }) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'financeTableList/remove',
-          payload: {
-            key: selectedRows.map(row => row.categoryId),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  handleSelectRows = (rows: FinanceTableListItem[]) => {
-    this.setState({
-      selectedRows: rows,
-    });
-  };
-
-  handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'financeTableList/fetch',
-        payload: values,
-      });
-    });
-  };
-
-  handleModalVisible = (flag?: boolean) => {
-    this.setState({
-      modalVisible: !!flag,
-    });
-  };
-
-  handleAdd = (fields: { desc: any }) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'financeTableList/add',
-      payload: {
-        desc: fields.desc,
-      },
-    });
-
-    message.success('添加成功');
-    this.handleModalVisible();
-  };
-
   initData = (year:number, month:number) => {
     const { dispatch } = this.props;
 
@@ -203,25 +122,40 @@ class TableList extends Component<TableListProps, TableListState> {
     });
   }
 
-  renderSimpleForm() {
-    const { form } = this.props;
-    const { getFieldDecorator } = form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则名称">
-              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-    );
+  handleUpdateModalVisible = (flag?: boolean, params: UpdateFinanceRemarkParams = {}) => {
+    this.setState({
+      updateModalVisible: !!flag,
+      updateRemarkParams: params,
+    });
+  };
+
+  handleUpdate = (remark: string) => {
+    let {updateRemarkParams} = this.state;
+    const { dispatch } = this.props;
+
+    updateRemarkParams.remark = remark;
+    dispatch({
+      type: 'financeTableList/update',
+      payload: updateRemarkParams,
+    });
+
+    this.handleUpdateModalVisible;
   }
 
-  renderForm() {
-    return this.renderSimpleForm();
-  }
+  /**
+   * 更新备注
+   * @param params
+   */
+  handleUpdateRemark = (params: UpdateFinanceRemarkParams) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'financeTableList/updateRemark',
+      payload: params,
+    });
+    this.setState({
+      updateModalVisible: true,
+    });
+  };
 
   render() {
     const {
@@ -229,20 +163,27 @@ class TableList extends Component<TableListProps, TableListState> {
       loading,
     } = this.props;
 
-    const { selectedRows } = this.state;
+    const {
+      updateModalVisible,
+      updateRemarkParams,
+    } = this.state;
 
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <FinanceTable
-              selectedRows={selectedRows}
               loading={loading}
               data={data}
-              onSelectRow={this.handleSelectRows}
               onChange={this.handleFinanceTableChange}
               initData={this.initData}
               onPressEnterCallBack={this.onPressEnterCallBack}
+              updateRemarkModalVisible={this.handleUpdateModalVisible}
+            />
+            <FinanceUpdateForm updateModalVisible={updateModalVisible}
+                               handleUpdate={this.handleUpdate}
+                               handleUpdateModalVisible={this.handleUpdateModalVisible}
+                               data={updateRemarkParams}
             />
           </div>
         </Card>
