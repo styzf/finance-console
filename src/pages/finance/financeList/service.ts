@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { TableListParams } from './data.d';
+import {TableListParams, UpdateFinanceRemarkParams} from './data.d';
 
 export async function queryFinance(params: TableListParams) {
   return request('/api/finance', {
@@ -30,6 +30,15 @@ export async function addRule(params: TableListParams) {
 export async function updateFinance(params: TableListParams) {
   return request('/api/finance', {
     method: 'POST',
+    data: {
+      ...params,
+    },
+  });
+}
+
+export async function addFinanceRemark(params: UpdateFinanceRemarkParams) {
+  return request('/api/finance/addRemark', {
+    method: 'PUT',
     data: {
       ...params,
     },

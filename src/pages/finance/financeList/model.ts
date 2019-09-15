@@ -1,6 +1,6 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { addRule, queryFinance, removeRule, updateFinance } from './service';
+import { addRule, queryFinance, removeRule, updateFinance, addFinanceRemark } from './service';
 
 import {FinanceTableListData, FinanceTableListItem, FinanceListData, FinanceData} from './data.d';
 
@@ -21,10 +21,12 @@ export interface ModelType {
     add: Effect;
     remove: Effect;
     update: Effect;
+    addRemark: Effect;
   };
   reducers: {
     save: Reducer<FinanceStateType>;
     updateCallback: Reducer<FinanceStateType>;
+    addRemarkCallback: Reducer<FinanceStateType>;
   };
 }
 
@@ -181,7 +183,7 @@ const Model: ModelType = {
 
       pushData(list, 'total',
         '汇总', '', total, true);
-      difference(childTotal,list,true);
+      difference(childTotal,list,false);
 
       yield put({
         type: 'save',
@@ -212,6 +214,14 @@ const Model: ModelType = {
       });
       if (callback) callback();
     },
+    *addRemark({ payload, callback }, { call, put }) {
+      yield call(addFinanceRemark, payload);
+      yield put({
+        type: 'addRemarkCallback',
+        payload: payload,
+      });
+      if (callback) callback();
+    },
   },
 
   reducers: {
@@ -232,14 +242,32 @@ const Model: ModelType = {
       let list = state.data.list;
       for (let data of list) {
         if (data.categoryId === payload.categoryId) {
-          data[payload.day] = payload.money;
+          data[payload.day].money = payload.money;
           break;
         }
       }
-      console.log({
+
+      return {
         ...state,
         data: state.data,
-      });
+      };
+    },
+    addRemarkCallback(state, action) {
+      if (!state) {
+        return {
+          data: {list:[]},
+        };
+      }
+
+      let payload = action.payload;
+      let list = state.data.list;
+      for (let data of list) {
+        if (data.categoryId === payload.categoryId) {
+          data[payload.day].remark = payload.remark;
+          break;
+        }
+      }
+
       return {
         ...state,
         data: state.data,

@@ -6,7 +6,7 @@ import {
   Input,
   Row,
   message,
-  Modal
+  Modal,
 } from 'antd';
 import React, { Component, Fragment } from 'react';
 
@@ -22,6 +22,7 @@ import CategoryStandardTable, { CategoryStandardTableColumnProps } from './compo
 import {CategoryListItem, TableListPagination, TableListParams, UpdateData} from './data.d';
 
 import styles from './style.less';
+import CategoryTree from "@/pages/category/categoryList/components/CategoryTree";
 
 const namespace = 'categoryListTableList';
 const FormItem = Form.Item;
@@ -373,14 +374,21 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
                 </span>
               )}
             </div>
-            <CategoryStandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={this.columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleCategoryStandardTableChange}
-            />
+            <Col span={6}>
+              <div style={{padding: '5px 5px'}}>
+                <CategoryTree />
+              </div>
+            </Col>
+            <Col span={18}>
+              <CategoryStandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={this.columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleCategoryStandardTableChange}
+              />
+            </Col>
           </div>
         </Card>
         <CreateForm {...parentMethods} modalVisible={modalVisible} treeData={tree}/>

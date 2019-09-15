@@ -129,32 +129,19 @@ class TableList extends Component<TableListProps, TableListState> {
     });
   };
 
-  handleUpdate = (remark: string) => {
-    let {updateRemarkParams} = this.state;
-    const { dispatch } = this.props;
-
-    updateRemarkParams.remark = remark;
-    dispatch({
-      type: 'financeTableList/update',
-      payload: updateRemarkParams,
-    });
-
-    this.handleUpdateModalVisible;
-  }
-
   /**
    * 更新备注
-   * @param params
+   * @param remark
    */
-  handleUpdateRemark = (params: UpdateFinanceRemarkParams) => {
-    const { dispatch } = this.props;
+  handleUpdateRemark = (remark: string) => {
+    const { dispatch, } = this.props;
+    let {updateRemarkParams} = this.state;
+    updateRemarkParams.remark = remark;
     dispatch({
-      type: 'financeTableList/updateRemark',
-      payload: params,
+      type: 'financeTableList/addRemark',
+      payload: updateRemarkParams,
     });
-    this.setState({
-      updateModalVisible: true,
-    });
+    this.handleUpdateModalVisible;
   };
 
   render() {
@@ -181,7 +168,7 @@ class TableList extends Component<TableListProps, TableListState> {
               updateRemarkModalVisible={this.handleUpdateModalVisible}
             />
             <FinanceUpdateForm updateModalVisible={updateModalVisible}
-                               handleUpdate={this.handleUpdate}
+                               handleUpdate={this.handleUpdateRemark}
                                handleUpdateModalVisible={this.handleUpdateModalVisible}
                                data={updateRemarkParams}
             />
