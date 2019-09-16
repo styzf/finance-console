@@ -58,7 +58,7 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
     dataIndex: 'sum',
     render: (text, record, index) => {
       if (text) {
-        return text.money;
+        return text.money.toFixed(2);
       }
       return "";
     }
@@ -110,7 +110,7 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
                                month={month}
                                day={i + 1}
                                categoryId={record.categoryId}
-                               text={money}
+                               text={money.toFixed(2)}
                                onPressEnterCallBack={onPressEnterCallBack}
                                disabled={record.disabled}
                   />
@@ -128,14 +128,14 @@ class FinanceTable extends Component<FinanceTableProps<FinanceTableListItem>, Fi
                                    month={month}
                                    day={i + 1}
                                    categoryId={record.categoryId}
-                                   text={money}
+                                   text={money.toFixed(2)}
                                    onPressEnterCallBack={onPressEnterCallBack}
                                    disabled={record.disabled}
                       />
                     </div>
 
                     <div className={styles.iconDiv}>
-                        <Tooltip title={x - y} >
+                        <Tooltip title={(x - y).toFixed(2)} >
                           <Icon type="info-circle" style={{margin : '0px 0px 0px 10px'}}/>
                         </Tooltip>
                         <Tooltip title={remark}>

@@ -85,7 +85,7 @@ const sumFinance = (total:Map<string, FinanceData>, data:Map<string, FinanceData
       // @ts-ignore
       if (total.get(key) && total.get(key).money) {
         // @ts-ignore
-        totalValue = total.get(key).money + totalValue;
+        totalValue = (total.get(key).money + totalValue);
       }
       total.set(key, {money:totalValue});
     }
@@ -110,7 +110,7 @@ const difference = (total:Map<string, FinanceData>, list:Array<FinanceTableListI
     }
 
     difference.set(key, {money:(value.money - previous)});
-    sum += value.money - previous;
+    sum += (value.money - previous);
     previous = value.money;
   }
   difference.set('sum', {money:sum});

@@ -5,7 +5,7 @@ import React, {KeyboardEvent} from 'react';
 import {UpdateFinanceParams} from "@/pages/finance/financeList/data";
 
 interface FinanceFormProps extends FormComponentProps {
-  text : number;
+  text : string;
   year : number;
   month : number;
   day : number;

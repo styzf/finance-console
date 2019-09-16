@@ -2,12 +2,16 @@ import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import {addCategory, queryCategory, removeCategory, updateCategory,getCategoryTree} from './service';
 
-import { TableListData,TreeData } from './data.d';
+import { TableListData, TreeData} from './data.d';
 import {TreeNode} from "antd/es/tree-select";
 
 export interface CategoryStateType {
   data: TableListData;
   tree: TreeNode[];
+}
+
+export interface CategoryStateData {
+  data: TableListData;
 }
 
 export interface TreeDataList {
@@ -30,7 +34,7 @@ export interface ModelType {
     update: CategoryEffect;
   };
   reducers: {
-    save: Reducer<CategoryStateType>;
+    save: Reducer<CategoryStateData>;
     saveTree: Reducer<TreeDataList>;
   };
 }
@@ -72,6 +76,17 @@ const CategoryModel: ModelType = {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryCategory, payload);
+      // if (payload.name && response.data.content) {
+      //   let list = response.data.content;
+      //   list.forEach((data:CategoryListItem) => {
+      //     const searchValue = payload.name;
+      //     let name = data.name;
+      //     const index = name.indexOf(searchValue);
+      //     const beforeStr = name.substr(0, index);
+      //     const afterStr = name.substr(index + searchValue.length);
+      //     data.name = beforeStr + '<span style="color:#f50;">' + searchValue + '</span>' + afterStr;
+      //   })
+      // }
       yield put({
         type: 'save',
         payload: {
@@ -113,7 +128,6 @@ const CategoryModel: ModelType = {
       return {
         ...state,
         data: action.payload,
-        tree: [],
       };
     },
     saveTree(state, action) {

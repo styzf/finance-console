@@ -1,78 +1,34 @@
-import { Tree, Input } from 'antd';
-import React, { Component } from 'react';
+import { Tree } from 'antd';
+import React, { Component} from 'react';
 
-import { CategoryListItem } from '../../data.d';
+// import { CategoryListItem } from '../../data.d';
+import {AntTreeNodeExpandedEvent, AntTreeNodeSelectedEvent} from "antd/lib/tree";
+import {TreeNode} from "antd/es/tree-select";
 
 const { TreeNode } = Tree;
-const { Search } = Input;
 
 export interface CategoryTreeProp {
-  // data: {
-  //   list: CategoryListItem[];
-  // };
+  categoryTreeData : Array<TreeNode>;
+  /**
+   * 展开或收回几点时候触发
+   * @param expandedKeys 分类id
+   * @param info
+   */
+  handleOnExpand: (expandedKeys: string[], info?: AntTreeNodeExpandedEvent) => void | PromiseLike<void>;
+  /**
+   * 选中节点的时候触发
+    * @param selectedKeys
+   * @param e
+   */
+  handleOnSelect: (selectedKeys: string[], e: AntTreeNodeSelectedEvent) => void;
 }
 
 interface CategoryTreeState {
-  expandedKeys: [],
-  searchValue: '',
-  autoExpandParent: true,
+  expandedKeys: string[],
+  searchValue: string,
+  autoExpandParent: boolean,
+  dataList:Array<TreeNode>;
 }
-
-const x = 3;
-const y = 2;
-const z = 1;
-const gData:Array<any> = [];
-
-const generateData = (_level:any, _preKey:any = '0', _tns:any = gData) => {
-  const preKey = _preKey;
-  const tns = _tns;
-
-  const children = [];
-  for (let i = 0; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    tns.push({ title: key, key });
-    if (i < y) {
-      children.push(key);
-    }
-  }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
-
-const dataList:Array<any> = [];
-const generateList = (data:any) => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const { key } = node;
-    dataList.push({ key, title: key });
-    if (node.children) {
-      generateList(node.children);
-    }
-  }
-};
-generateList(gData);
-
-const getParentKey = (key:any, tree:Array<any>) => {
-  let parentKey:any;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some((item:any) => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey;
-};
 
 class CategoryTree extends Component<CategoryTreeProp, CategoryTreeState> {
 
@@ -84,39 +40,29 @@ class CategoryTree extends Component<CategoryTreeProp, CategoryTreeState> {
       expandedKeys: [],
       searchValue: '',
       autoExpandParent: true,
+      dataList:[],
     };
   }
 
-  onExpand = (expandedKeys:any) => {
+  onExpand = (expandedKeys:string[]) => {
+    const { handleOnExpand } = this.props;
+    handleOnExpand(expandedKeys);
     this.setState({
       expandedKeys,
       autoExpandParent: false,
     });
   };
 
-  onChange = e => {
-    const { value } = e.target;
-    const expandedKeys = dataList
-      .map(item => {
-        if (item.title.indexOf(value) > -1) {
-          return getParentKey(item.key, gData);
-        }
-        return null;
-      })
-      .filter((item, i, self) => item && self.indexOf(item) === i);
-    this.setState({
-      expandedKeys,
-      searchValue: value,
-      autoExpandParent: true,
-    });
-  };
-
   render() {
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
-    const loop = (data:Array<any>) =>
+    const { categoryTreeData, handleOnSelect } = this.props;
+    const loop = (data:Array<TreeNode>) =>
       data.map(item => {
+        // @ts-ignore
         const index = item.title.indexOf(searchValue);
+        // @ts-ignore
         const beforeStr = item.title.substr(0, index);
+        // @ts-ignore
         const afterStr = item.title.substr(index + searchValue.length);
         const title =
           index > -1 ? (
@@ -130,22 +76,27 @@ class CategoryTree extends Component<CategoryTreeProp, CategoryTreeState> {
           );
         if (item.children) {
           return (
-            <TreeNode key={item.key} title={title}>
-              {loop(item.children)}
+            // @ts-ignore
+            <TreeNode key={item.key} title={title} >
+              {
+                // @ts-ignore
+                loop(item.children)
+              }
             </TreeNode>
           );
         }
+        // @ts-ignore
         return <TreeNode key={item.key} title={title} />;
       });
     return (
       <div>
-        <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={this.onChange} />
         <Tree
           onExpand={this.onExpand}
           expandedKeys={expandedKeys}
           autoExpandParent={autoExpandParent}
+          onSelect={handleOnSelect}
         >
-          {loop(gData)}
+          {loop(categoryTreeData)}
         </Tree>
       </div>
     );

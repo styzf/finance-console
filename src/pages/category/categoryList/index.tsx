@@ -23,6 +23,7 @@ import {CategoryListItem, TableListPagination, TableListParams, UpdateData} from
 
 import styles from './style.less';
 import CategoryTree from "@/pages/category/categoryList/components/CategoryTree";
+import {AntTreeNodeExpandedEvent, AntTreeNodeSelectedEvent} from "antd/lib/tree";
 
 const namespace = 'categoryListTableList';
 const FormItem = Form.Item;
@@ -85,6 +86,10 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
       dataIndex: 'name',
     },
     {
+      title: '关键KEY',
+      dataIndex: 'categoryKey',
+    },
+    {
       title: '创建时间',
       dataIndex: 'createTime',
     },
@@ -110,7 +115,11 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   handleInit() {
     const { dispatch } = this.props;
     dispatch({
+      type: namespace + '/getTree',
+    });
+    dispatch({
       type: namespace + '/fetch',
+      payload: {parentId:'0'},
     });
   }
 
@@ -311,6 +320,44 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     this.handleUpdateModalVisible();
   };
 
+  /**
+   * 树节点展开，收起触发
+   * @param expandedKeys 已经展开的节点的id
+   * @param info
+   */
+  handleOnExpand = (expandedKeys: string[], info?: AntTreeNodeExpandedEvent) => {
+
+  };
+
+  /**
+   * 树节点选中时候触发
+   * @param selectedKeys
+   * @param e
+   */
+  handleOnSelect = (selectedKeys: string[], e: AntTreeNodeSelectedEvent) => {
+    // 这里应该可以处理一下，不应该这么复杂处理，考虑在组件里面做一点处理
+    if (!e.selectedNodes || !e.selectedNodes[0] || !e.selectedNodes[0].props || !e.selectedNodes[0].props.children ||
+      // @ts-ignore
+      e.selectedNodes[0].props.children.length <= 0) {
+      return;
+    }
+    if (! selectedKeys) {
+      selectedKeys = ['0'];
+    }
+    const { dispatch,categoryListTableList,}  = this.props;
+    const {data:{pagination}} = categoryListTableList;
+    const params: Partial<TableListParams> = {
+      page: pagination.current,
+      size: pagination.pageSize,
+      parentId:selectedKeys[0],
+    };
+
+    dispatch({
+      type: namespace + '/fetch',
+      payload: params,
+    });
+  };
+
   renderSimpleForm() {
     const { form } = this.props;
     const { getFieldDecorator } = form;
@@ -376,7 +423,10 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
             </div>
             <Col span={6}>
               <div style={{padding: '5px 5px'}}>
-                <CategoryTree />
+                <CategoryTree categoryTreeData={tree}
+                              handleOnExpand={this.handleOnExpand}
+                              handleOnSelect={this.handleOnSelect}
+                />
               </div>
             </Col>
             <Col span={18}>

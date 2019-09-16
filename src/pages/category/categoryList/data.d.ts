@@ -16,6 +16,13 @@ export interface CategoryListItem {
   parentId: string;
 }
 
+export interface CategoryTreeVo {
+  title:string;
+  key:string;
+  children:CategoryTreeVo[];
+  parentKey:string;
+}
+
 export interface UpdateData {
   id: string;
   name: string;
@@ -39,6 +46,7 @@ export interface TableListParams {
   name: string;
   size: number;
   page: number;
+  parentId: string;
   categoryIds: Array<string>;
 }
 

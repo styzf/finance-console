@@ -39,7 +39,7 @@ export default [
         routes: [
           {
             path: '/',
-            redirect: '/finance/list',
+            redirect: '/category/list',
             // authority: ['admin', 'user'],
           },
           // category
