@@ -140,9 +140,14 @@ export default {
       pathRewrite: { '^/server': '' },
     },
     '/api': {
-      target: 'http://127.0.0.1:8080/',
+      target: 'http://127.0.0.1:60093/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
+    },
+    '/api/user': {
+      target: 'http://127.0.0.1:60094/',
+      changeOrigin: true,
+      pathRewrite: { '^/api/user': '' },
     },
   },
 } as IConfig;
