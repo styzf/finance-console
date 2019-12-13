@@ -140,14 +140,14 @@ export default {
       pathRewrite: { '^/server': '' },
     },
     '/api': {
-      target: 'http://127.0.0.1:60093/',
+      target: 'http://127.0.0.1:13141/',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      // pathRewrite: { '^/api': '' },
     },
     '/api/user': {
-      target: 'http://127.0.0.1:60094/',
+      target: 'http://127.0.0.1:13141/',
       changeOrigin: true,
-      pathRewrite: { '^/api/user': '' },
+      pathRewrite: { '^/api': '' },
     },
   },
 } as IConfig;
