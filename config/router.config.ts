@@ -47,6 +47,7 @@ export default [
             path: '/category',
             name: 'category',
             icon: 'table',
+            authority: ['admin', 'user'],
             routes: [
               {
                 path: '/category/list',
@@ -72,6 +73,7 @@ export default [
             name: 'result',
             icon: 'check-circle-o',
             path: '/result',
+            hideInMenu:true,
             routes: [
               {
                 name: 'success',
@@ -89,6 +91,7 @@ export default [
             name: 'exception',
             icon: 'warning',
             path: '/exception',
+            hideInMenu:true,
             routes: [
               {
                 name: '403',

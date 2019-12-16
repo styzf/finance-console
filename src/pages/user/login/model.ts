@@ -43,7 +43,7 @@ const Model: ModelType = {
       });
       console.log(response);
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.success) {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };

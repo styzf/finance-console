@@ -4,6 +4,7 @@
  */
 import {extend} from 'umi-request';
 import { notification } from 'antd';
+import router from "umi/router";
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -42,6 +43,23 @@ const errorHandler = (error: { response: Response }): Response => {
       message: '网络异常',
     });
   }
+  if (response.status === 401) {
+    // @HACK
+    /* eslint-disable no-underscore-dangle */
+    // window.g_app._store.dispatch({
+    //   type: 'login/logout',
+    // });
+  }
+  // environment should not be used
+  if (response.status === 403) {
+    router.push('/exception/403');
+  }
+  if (response.status <= 504 && response.status >= 500) {
+    router.push('/exception/500');
+  }
+  if (response.status >= 404 && response.status < 422) {
+    router.push('/exception/404');
+  }
 
   return response;
 };
@@ -53,7 +71,5 @@ const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
-
-
 
 export default request;

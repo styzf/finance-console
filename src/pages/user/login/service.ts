@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { FormDataType } from './index';
 
 export async function fakeAccountLogin(params: FormDataType) {
-  return request('/api/user/userlogin', {
+  return request('/api/auth/userlogin', {
     method: 'POST',
     data: params,
   });

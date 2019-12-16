@@ -139,15 +139,25 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/server': '' },
     },
-    '/api': {
-      target: 'http://127.0.0.1:13141/',
-      changeOrigin: true,
-      // pathRewrite: { '^/api': '' },
-    },
-    '/api/user': {
-      target: 'http://127.0.0.1:13141/',
+    '/api/finance': {
+      target: 'http://192.168.13.133:8081/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
+    },
+    '/api/category': {
+      target: 'http://192.168.13.133:8081/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+    '/api/user': {
+      target: 'http://192.168.0.139:60094/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+    '/api/auth': {
+      target: 'http://192.168.0.139:60094/',
+      changeOrigin: true,
+      pathRewrite: { '^/api/auth': '' },
     },
   },
 } as IConfig;
