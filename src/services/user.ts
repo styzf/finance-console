@@ -5,11 +5,11 @@ export async function query(): Promise<any> {
 }
 
 export async function queryCurrent(): Promise<any> {
-  // return;
-  return request('/api/currentUser');
+  return;
+  // return request('/api/currentUser');
 }
 
 export async function queryNotices(): Promise<any> {
-  // return;
-  return request('/api/notices');
+  return;
+  // return request('/api/notices');
 }
