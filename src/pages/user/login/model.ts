@@ -37,11 +37,13 @@ const Model: ModelType = {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+
+      // 存储权限信息
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       });
-      console.log(response);
+
       // Login successfully
       if (response.success) {
         const urlParams = new URL(window.location.href);
@@ -59,6 +61,7 @@ const Model: ModelType = {
             return;
           }
         }
+        console.log(redirect);
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
@@ -70,7 +73,7 @@ const Model: ModelType = {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      setAuthority(payload.authList);
       return {
         ...state,
         status: payload.status,

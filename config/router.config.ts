@@ -35,24 +35,24 @@ export default [
         path: '/',
         component: '../layouts/BasicLayout',
         Routes: ['src/pages/Authorized'],
-        authority: ['admin', 'user'],
         routes: [
           {
             path: '/',
             redirect: '/category/list',
-            // authority: ['admin', 'user'],
+            authority: ['admin', 'category_list'],
           },
           // category
           {
             path: '/category',
             name: 'category',
             icon: 'table',
-            authority: ['admin', 'user'],
+            authority: ['admin', 'category'],
             routes: [
               {
                 path: '/category/list',
                 name: 'categoryList',
                 component: './category/categoryList',
+                authority: ['admin', 'category_list'],
               },
             ],
           },
@@ -61,11 +61,13 @@ export default [
             path: '/finance',
             name: 'finance',
             icon: 'table',
+            authority: ['admin', 'finance'],
             routes: [
               {
                 path: '/finance/list',
                 name: 'financeList',
                 component: './finance/financeList',
+                authority: ['admin', 'finance_list'],
               },
             ],
           },

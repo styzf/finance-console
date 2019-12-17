@@ -150,12 +150,12 @@ export default {
       pathRewrite: { '^/api': '' },
     },
     '/api/user': {
-      target: 'http://192.168.0.139:60094/',
+      target: 'http://192.168.13.133:8082/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
     '/api/auth': {
-      target: 'http://192.168.0.139:60094/',
+      target: 'http://192.168.13.133:8082/',
       changeOrigin: true,
       pathRewrite: { '^/api/auth': '' },
     },
