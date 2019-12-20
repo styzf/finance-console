@@ -79,9 +79,12 @@ let jwt = '';
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
   console.log(document.cookie);
-  const headers = {
-    'Authorization': 'Bearer ' + jwt,
-  };
+  let headers = {};
+  if (jwt) {
+    headers = {
+      'Authorization': 'Bearer ' + jwt,
+    };
+  }
   return (
     {
       url: `${url}&interceptors=yes`,
