@@ -29,7 +29,6 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  console.log(response);
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -85,7 +84,7 @@ request.interceptors.request.use((url, options) => {
       now_tocken = cookie.replace('uid=','');
     }
   });
-  if (now_tocken && now_tocken !== token) {
+  if (now_tocken && now_tocken !== token && url !== '/api/auth/userjwt') {
     request('/api/auth/userjwt', {
       method: 'GET',
     }).then(rsp => {
