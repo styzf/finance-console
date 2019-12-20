@@ -73,12 +73,25 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
-let cookie = '';
+let token = '';
+let now_tocken = '';
 let jwt = '';
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
-  console.log(document.cookie);
+  let cookieArr = document.cookie.split(";");
+  cookieArr.forEach(cookie => {
+    if (cookie.startsWith('uid')) {
+      now_tocken = cookie.replace('uid=','');
+    }
+  });
+  if (now_tocken && now_tocken !== token) {
+    request('/api/auth/userjwt', {
+      method: 'GET',
+    }).then(rsp => {
+      jwt = rsp.jwt;
+    })
+  }
   let headers = {};
   if (jwt) {
     headers = {
