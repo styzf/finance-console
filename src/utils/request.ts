@@ -87,13 +87,15 @@ request.interceptors.request.use((url, options) => {
   if (! jwt) {
     request('/api/auth/userjwt').then(rsp => {
       jwt = rsp.jwt;
-      // @ts-ignore
-      localStorage.setItem(key, jwt);
-    })
+      if (jwt) {
+        // @ts-ignore
+        localStorage.setItem(key, jwt);
+      }
+    });
   }
   const headers = {
     'Authorization': 'Bearer '+jwt,
-  }
+  };
 
   return (
     {
