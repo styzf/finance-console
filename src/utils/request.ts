@@ -97,6 +97,13 @@ request.interceptors.request.use((url, options) => {
       'Authorization': 'Bearer ' + jwt,
     };
   }
+
+  console.log("各个参数");
+  console.log(token);
+  console.log(jwt);
+  console.log(now_tocken);
+  console.log(headers);
+
   return (
     {
       url: `${url}`,
