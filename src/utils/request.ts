@@ -29,6 +29,7 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
+  console.log(response);
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -70,6 +71,23 @@ const errorHandler = (error: { response: Response }): Response => {
 const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
+});
+
+let cookie = '';
+let jwt = '';
+
+// request拦截器, 改变url 或 options.
+request.interceptors.request.use((url, options) => {
+  console.log(document.cookie);
+  const headers = {
+    'Authorization': 'Bearer ' + jwt,
+  };
+  return (
+    {
+      url: `${url}&interceptors=yes`,
+      options: { ...options, headers },
+    }
+  );
 });
 
 export default request;
