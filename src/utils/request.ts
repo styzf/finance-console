@@ -74,10 +74,31 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use((url, options) => {
+  if ('/api/auth/userjwt' === url) {
+    return (
+      {
+        url: `${url}`,
+        options: { ...options},
+      }
+    )
+  }
+  const key = 'authority';
+  let jwt = localStorage.getItem(key);
+  if (! jwt) {
+    request('/api/auth/userjwt').then(rsp => {
+      jwt = rsp.jwt;
+      // @ts-ignore
+      localStorage.setItem(key, jwt);
+    })
+  }
+  const headers = {
+    'Authorization': 'Bearer '+jwt,
+  }
+
   return (
     {
       url: `${url}`,
-      options: { ...options },
+      options: { ...options , headers},
     }
   );
 });
