@@ -87,7 +87,7 @@ request.interceptors.request.use((url, options) => {
   }
   return (
     {
-      url: `${url}&interceptors=yes`,
+      url: `${url}`,
       options: { ...options, headers },
     }
   );
