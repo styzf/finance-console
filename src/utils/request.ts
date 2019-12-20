@@ -81,7 +81,7 @@ let jwt = '';
 request.interceptors.request.use((url, options) => {
   let cookieArr = document.cookie.split(";");
   cookieArr.forEach(cookie => {
-    if (cookie.startsWith('uid')) {
+    if (cookie.startsWith('uid=')) {
       now_tocken = cookie.replace('uid=','');
     }
   });
