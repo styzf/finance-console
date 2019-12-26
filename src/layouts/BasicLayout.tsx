@@ -76,10 +76,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   useEffect(() => {
     if (dispatch) {
       dispatch({
-        type: 'user/fetchCurrent',
+        type: 'settings/getSetting',
       });
       dispatch({
-        type: 'settings/getSetting',
+        type: 'user/fetchCurrent',
       });
     }
   }, []);
