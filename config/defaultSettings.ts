@@ -50,7 +50,7 @@ export default {
   contentWidth: 'Fluid',
   fixedHeader: false,
   autoHideHeader: false,
-  fixSiderbar: false,
+  fixSiderbar: true,
   colorWeak: false,
   menu: {
     locale: true,
@@ -59,3 +59,4 @@ export default {
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;
+
