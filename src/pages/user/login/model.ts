@@ -43,7 +43,6 @@ const Model: ModelType = {
         type: 'changeLoginStatus',
         payload: response,
       });
-
       // Login successfully
       if (response.success) {
         const urlParams = new URL(window.location.href);
@@ -57,11 +56,11 @@ const Model: ModelType = {
               redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
-            window.location.href = redirect;
+            // 先不开放对外链接跳转
+            // window.location.href = redirect;
             return;
           }
         }
-        console.log(redirect);
         yield put(routerRedux.replace(redirect || '/'));
       }
     },

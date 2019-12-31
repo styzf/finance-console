@@ -127,7 +127,7 @@ class Login extends Component<
               )}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'user-login.login.userName' })}: admin or user`}
+              placeholder={`${formatMessage({ id: 'user-login.login.userName' })}`}
               rules={[
                 {
                   required: true,
@@ -137,7 +137,7 @@ class Login extends Component<
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'user-login.login.password' })}: ant.design`}
+              placeholder={`${formatMessage({ id: 'user-login.login.password' })}: 111111`}
               rules={[
                 {
                   required: true,
@@ -146,6 +146,7 @@ class Login extends Component<
               ]}
               onPressEnter={e => {
                 e.preventDefault();
+                // @ts-ignore
                 this.loginForm.validateFields(this.handleSubmit);
               }}
             />
