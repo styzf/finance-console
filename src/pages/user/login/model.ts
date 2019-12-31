@@ -1,6 +1,6 @@
 import { AnyAction, Reducer } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { fakeAccountLogin, getFakeCaptcha } from './service';
 import { getPageQuery, setAuthority } from './utils/utils';
 
@@ -51,17 +51,19 @@ const Model: ModelType = {
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
           if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
+            // redirect = redirect.substr(urlParams.origin.length);
+            // if (redirect.match(/^\/.*#/)) {
+            //   redirect = redirect.substr(redirect.indexOf('#') + 1);
+            // }
+            window.location.href = redirect;
           } else {
             // 先不开放对外链接跳转
             // window.location.href = redirect;
             return;
           }
         }
-        yield put(routerRedux.replace(redirect || '/'));
+        // window.alert(redirect);
+        // yield put(routerRedux.replace(redirect || '/'));
       }
     },
 
