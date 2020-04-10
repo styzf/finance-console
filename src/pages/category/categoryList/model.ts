@@ -100,6 +100,9 @@ const CategoryModel: ModelType = {
     },
     *getTree({ payload }, { call, put }) {
       const response = yield call(getCategoryTree, payload);
+      if (! response.data) {
+        return;
+      }
       let treeDataList = response.data.childList;
 
       let tree = getChildren(treeDataList);
