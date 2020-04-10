@@ -46,10 +46,12 @@ const Model: ModelType = {
       // Login successfully
       if (response.success) {
         const urlParams = new URL(window.location.href);
+        console.log(urlParams);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
+          console.log(redirectUrlParams);
           if (redirectUrlParams.origin === urlParams.origin) {
             // redirect = redirect.substr(urlParams.origin.length);
             // if (redirect.match(/^\/.*#/)) {
@@ -61,6 +63,9 @@ const Model: ModelType = {
             // window.location.href = redirect;
             return;
           }
+        } else {
+          console.log(urlParams.origin);
+          window.location.href = urlParams.origin;
         }
         // window.alert(redirect);
         // yield put(routerRedux.replace(redirect || '/'));
