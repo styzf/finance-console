@@ -29,9 +29,9 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
+  const { status, url } = response;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
 
     notification.error({
       message: `请求错误 ${status}: ${url}`,
@@ -43,12 +43,13 @@ const errorHandler = (error: { response: Response }): Response => {
       message: '网络异常',
     });
   }
+  console.log(response);
   if (response.status === 401) {
+    // @ts-ignore
     // @HACK
-    /* eslint-disable no-underscore-dangle */
-    // window.g_app._store.dispatch({
-    //   type: 'login/logout',
-    // });
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
   }
   // environment should not be used
   if (response.status === 403) {
@@ -60,7 +61,13 @@ const errorHandler = (error: { response: Response }): Response => {
   if (response.status >= 404 && response.status < 422) {
     router.push('/exception/404');
   }
-
+  if (response.statusText === 'Unauthorized') {
+    // @ts-ignore
+    // @HACK
+    window.g_app._store.dispatch({
+      type: 'login/logout',
+    });
+  }
   return response;
 };
 
