@@ -14,6 +14,7 @@ export interface CategoryListItem {
   progress: number;
   key: string;
   parentId: string;
+  categoryKey: string;
 }
 
 export interface CategoryTreeVo {
@@ -27,6 +28,7 @@ export interface UpdateData {
   id: string;
   name: string;
   parentId: string;
+  categoryKey: string;
 }
 
 export interface TableListPagination {

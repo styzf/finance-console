@@ -50,6 +50,7 @@ const CreateForm: React.FC<UpdateFormProps> = props => {
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类关键key">
         {form.getFieldDecorator('categoryKey', {
           rules: [{ required: true, message: '请输入至少两个字符的关键key描述！', min: 2 }],
+          initialValue:data.categoryKey,
         })(<Input placeholder="请输入" />)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="分类父id">
