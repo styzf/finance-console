@@ -80,16 +80,16 @@ const request = extend({
 });
 
 // request拦截器, 改变url 或 options.
-request.interceptors.request.use((url, options) => {
-  if (url && url.startsWith('/api')) {
-    url = url.replace('/api', '');
-  }
-  return (
-    {
-      url: `${url}`,
-      options: { ...options},
-    }
-  )
+// request.interceptors.request.use((url, options) => {
+//   if (url && url.startsWith('/api')) {
+//     url = url.replace('/api', '');
+//   }
+//   return (
+//     {
+//       url: `${url}`,
+//       options: { ...options},
+//     }
+//   )
   // if ('/api/auth/userjwt' === url) {
   //   return (
   //     {
@@ -119,6 +119,6 @@ request.interceptors.request.use((url, options) => {
   //     options: { ...options , headers},
   //   }
   // );
-});
+// });
 
 export default request;
