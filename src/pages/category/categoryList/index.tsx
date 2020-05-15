@@ -1,29 +1,22 @@
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Row,
-  message,
-  Modal,
-} from 'antd';
-import React, {Component, Fragment} from 'react';
+import { Button, Card, Col, Form, Input, Row, message, Modal } from 'antd';
+import React, { Component, Fragment } from 'react';
 
-import {Dispatch} from 'redux';
-import {FormComponentProps} from 'antd/es/form';
-import {PageHeaderWrapper} from '@ant-design/pro-layout';
-import {SorterResult} from 'antd/es/table';
-import {connect} from 'dva';
-import {CategoryStateType} from './model';
+import { Dispatch } from 'redux';
+import { FormComponentProps } from 'antd/es/form';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { SorterResult } from 'antd/es/table';
+import { connect } from 'dva';
+import { CategoryStateType } from './model';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import CategoryStandardTable, {CategoryStandardTableColumnProps} from './components/CategoryStandardTable';
-import {CategoryListItem, TableListPagination, TableListParams, UpdateData} from './data.d';
+import CategoryStandardTable, {
+  CategoryStandardTableColumnProps,
+} from './components/CategoryStandardTable';
+import { CategoryListItem, TableListPagination, TableListParams, UpdateData } from './data.d';
 
 import styles from './style.less';
-import CategoryTree from "@/pages/category/categoryList/components/CategoryTree";
-import {AntTreeNodeExpandedEvent, AntTreeNodeSelectedEvent} from "antd/lib/tree";
+import CategoryTree from '@/pages/category/categoryList/components/CategoryTree';
+import { AntTreeNodeExpandedEvent, AntTreeNodeSelectedEvent } from 'antd/lib/tree';
 
 const namespace = 'categoryListTableList';
 const FormItem = Form.Item;
@@ -51,9 +44,9 @@ interface TableListState {
 
 @connect(
   ({
-     categoryListTableList,
-     loading,
-   }: {
+    categoryListTableList,
+    loading,
+  }: {
     categoryListTableList: CategoryStateType;
     loading: {
       models: {
@@ -74,7 +67,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     formValues: {},
     deleteId: '',
     updateId: '',
-    updateData: {id: '', name: '', parentId: '', categoryKey: ''},
+    updateData: { id: '', name: '', parentId: '', categoryKey: '' },
   };
 
   /**
@@ -95,7 +88,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     },
     {
       title: '操作',
-      render: (text) => (
+      render: text => (
         <Fragment>
           <Col span={12}>
             <a onClick={() => this.handleUpdateModalVisible(true, text)}>修改</a>
@@ -113,26 +106,26 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   }
 
   handleInit() {
-    const {dispatch} = this.props;
+    const { dispatch } = this.props;
     dispatch({
       type: namespace + '/getTree',
     });
     dispatch({
       type: namespace + '/fetch',
-      payload: {parentId: '0'},
+      payload: { parentId: '0' },
     });
   }
 
   handleCategoryStandardTableChange = (
     pagination: Partial<TableListPagination>,
-    filtersArg: Record<keyof CategoryListItem, string[]>,
+    filtersArg: Partial<Record<keyof CategoryListItem, string[]>>,
     sorter: SorterResult<CategoryListItem>,
   ) => {
-    const {dispatch} = this.props;
-    const {formValues} = this.state;
+    const { dispatch } = this.props;
+    const { formValues } = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = {...obj};
+      const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
@@ -154,7 +147,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   };
 
   handleFormReset = () => {
-    const {form, dispatch} = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
     this.setState({
       formValues: {},
@@ -166,17 +159,17 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   };
 
   handRemove = () => {
-    const {selectedRows} = this.state;
+    const { selectedRows } = this.state;
     this.handRemoveByIdOrSelected(selectedRows, '');
   };
 
   handRemoveById = () => {
-    const {deleteId} = this.state;
+    const { deleteId } = this.state;
     this.handRemoveByIdOrSelected([], deleteId);
   };
 
   handRemoveByIdOrSelected = (selectedRows: CategoryListItem[], deleteId: string) => {
-    const {dispatch} = this.props;
+    const { dispatch } = this.props;
 
     let categoryIds;
     if (deleteId) {
@@ -211,7 +204,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const {dispatch, form} = this.props;
+    const { dispatch, form } = this.props;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -234,7 +227,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
 
   handleModalVisible = (flag?: boolean) => {
     if (flag) {
-      const {dispatch} = this.props;
+      const { dispatch } = this.props;
       dispatch({
         type: namespace + '/getTree',
       });
@@ -247,17 +240,17 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
 
   handleUpdateModalVisible = (flag?: boolean, data?: CategoryListItem) => {
     if (flag) {
-      const {dispatch} = this.props;
+      const { dispatch } = this.props;
       dispatch({
         type: namespace + '/getTree',
       });
     }
 
-    let updateData = {id: '', name: '', parentId: '', categoryKey: ''};
+    let updateData = { id: '', name: '', parentId: '', categoryKey: '' };
     let updateId = '';
     if (data) {
-      const {name, id, parentId, categoryKey} = data;
-      updateData = {id: id, name: name, parentId: parentId, categoryKey: categoryKey};
+      const { name, id, parentId, categoryKey } = data;
+      updateData = { id: id, name: name, parentId: parentId, categoryKey: categoryKey };
       updateId = id;
     }
     this.setState({
@@ -278,8 +271,8 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     });
   };
 
-  handleAdd = (fields: { name: string, parentId: number, categoryKey: string }) => {
-    const {dispatch} = this.props;
+  handleAdd = (fields: { name: string; parentId: number; categoryKey: string }) => {
+    const { dispatch } = this.props;
     dispatch({
       type: namespace + '/add',
       payload: {
@@ -296,11 +289,11 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
     this.handleModalVisible();
   };
 
-  handleUpdate = (fields: { name: string, parentId: number, categoryKey: string, }) => {
-    const {dispatch} = this.props;
-    const {updateId} = this.state;
+  handleUpdate = (fields: { name: string; parentId: number; categoryKey: string }) => {
+    const { dispatch } = this.props;
+    const { updateId } = this.state;
     if (!updateId) {
-      alert("更新失败");
+      alert('更新失败');
     }
 
     dispatch({
@@ -325,9 +318,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
    * @param expandedKeys 已经展开的节点的id
    * @param info
    */
-  handleOnExpand = (expandedKeys: string[], info?: AntTreeNodeExpandedEvent) => {
-
-  };
+  handleOnExpand = (expandedKeys: string[], info?: AntTreeNodeExpandedEvent) => {};
 
   /**
    * 树节点选中时候触发
@@ -336,16 +327,23 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
    */
   handleOnSelect = (selectedKeys: string[], e: AntTreeNodeSelectedEvent) => {
     // 这里应该可以处理一下，不应该这么复杂处理，考虑在组件里面做一点处理
-    if (!e.selectedNodes || !e.selectedNodes[0] || !e.selectedNodes[0].props || !e.selectedNodes[0].props.children ||
+    if (
+      !e.selectedNodes ||
+      !e.selectedNodes[0] ||
+      !e.selectedNodes[0].props ||
+      !e.selectedNodes[0].props.children ||
       // @ts-ignore
-      e.selectedNodes[0].props.children.length <= 0) {
+      e.selectedNodes[0].props.children.length <= 0
+    ) {
       return;
     }
     if (!selectedKeys) {
       selectedKeys = ['0'];
     }
-    const {dispatch, categoryListTableList,} = this.props;
-    const {data: {pagination}} = categoryListTableList;
+    const { dispatch, categoryListTableList } = this.props;
+    const {
+      data: { pagination },
+    } = categoryListTableList;
     const params: Partial<TableListParams> = {
       page: pagination.current,
       size: pagination.pageSize,
@@ -359,14 +357,14 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   };
 
   renderSimpleForm() {
-    const {form} = this.props;
-    const {getFieldDecorator} = form;
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="分类名称">
-              {getFieldDecorator('name')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('name')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -374,7 +372,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
-              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>
+              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
             </span>
@@ -390,11 +388,11 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
 
   render() {
     const {
-      categoryListTableList: {data, tree},
+      categoryListTableList: { data, tree },
       loading,
     } = this.props;
 
-    const {selectedRows, modalVisible, updateModalVisible, updateData} = this.state;
+    const { selectedRows, modalVisible, updateModalVisible, updateData } = this.state;
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -422,10 +420,11 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
               )}
             </div>
             <Col span={6}>
-              <div style={{padding: '5px 5px'}}>
-                <CategoryTree categoryTreeData={tree}
-                              handleOnExpand={this.handleOnExpand}
-                              handleOnSelect={this.handleOnSelect}
+              <div style={{ padding: '5px 5px' }}>
+                <CategoryTree
+                  categoryTreeData={tree}
+                  handleOnExpand={this.handleOnExpand}
+                  handleOnSelect={this.handleOnSelect}
                 />
               </div>
             </Col>
@@ -441,14 +440,21 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
             </Col>
           </div>
         </Card>
-        <CreateForm {...parentMethods} modalVisible={modalVisible} treeData={tree}/>
-        <UpdateForm {...updateMethods} updateModalVisible={updateModalVisible} data={updateData} treeData={tree}/>
+        <CreateForm {...parentMethods} modalVisible={modalVisible} treeData={tree} />
+        <UpdateForm
+          {...updateMethods}
+          updateModalVisible={updateModalVisible}
+          data={updateData}
+          treeData={tree}
+        />
         <Modal
           title="确认框"
           visible={this.state.deleteModalVisible}
           onOk={this.handRemoveById}
           onCancel={this.handleHideDeleteModal}
-        >确认要删除吗？</Modal>
+        >
+          确认要删除吗？
+        </Modal>
       </PageHeaderWrapper>
     );
   }

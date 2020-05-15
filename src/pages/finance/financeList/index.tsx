@@ -1,7 +1,4 @@
-import {
-  Card,
-  Form,
-} from 'antd';
+import { Card, Form } from 'antd';
 import React, { Component } from 'react';
 
 import { Dispatch } from 'redux';
@@ -16,11 +13,11 @@ import {
   TableListPagination,
   TableListParams,
   UpdateFinanceParams,
-  UpdateFinanceRemarkParams
+  UpdateFinanceRemarkParams,
 } from './data.d';
 
 import styles from './style.less';
-import FinanceUpdateForm from "@/pages/finance/financeList/components/FinanceUpdateForm";
+import FinanceUpdateForm from '@/pages/finance/financeList/components/FinanceUpdateForm';
 
 const getValue = (obj: { [x: string]: string[] }) =>
   Object.keys(obj)
@@ -77,7 +74,7 @@ class TableList extends Component<TableListProps, TableListState> {
 
   handleFinanceTableChange = (
     pagination: Partial<TableListPagination>,
-    filtersArg: Record<keyof FinanceTableListItem, string[]>,
+    filtersArg: Partial<Record<keyof FinanceTableListItem, string[]>>,
     sorter: SorterResult<FinanceTableListItem>,
   ) => {
     const { dispatch } = this.props;
@@ -105,22 +102,22 @@ class TableList extends Component<TableListProps, TableListState> {
     });
   };
 
-  initData = (year:number, month:number) => {
+  initData = (year: number, month: number) => {
     const { dispatch } = this.props;
 
     dispatch({
       type: 'financeTableList/fetch',
-      payload: {year, month},
+      payload: { year, month },
     });
   };
 
-  onPressEnterCallBack = (params:UpdateFinanceParams) => {
+  onPressEnterCallBack = (params: UpdateFinanceParams) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'financeTableList/update',
       payload: params,
     });
-  }
+  };
 
   handleUpdateModalVisible = (flag?: boolean, params: UpdateFinanceRemarkParams = {}) => {
     this.setState({
@@ -134,8 +131,8 @@ class TableList extends Component<TableListProps, TableListState> {
    * @param remark
    */
   handleUpdateRemark = (remark: string) => {
-    const { dispatch, } = this.props;
-    let {updateRemarkParams} = this.state;
+    const { dispatch } = this.props;
+    let { updateRemarkParams } = this.state;
     updateRemarkParams.remark = remark;
     dispatch({
       type: 'financeTableList/addRemark',
@@ -150,10 +147,7 @@ class TableList extends Component<TableListProps, TableListState> {
       loading,
     } = this.props;
 
-    const {
-      updateModalVisible,
-      updateRemarkParams,
-    } = this.state;
+    const { updateModalVisible, updateRemarkParams } = this.state;
 
     return (
       <PageHeaderWrapper>
@@ -167,10 +161,11 @@ class TableList extends Component<TableListProps, TableListState> {
               onPressEnterCallBack={this.onPressEnterCallBack}
               updateRemarkModalVisible={this.handleUpdateModalVisible}
             />
-            <FinanceUpdateForm updateModalVisible={updateModalVisible}
-                               handleUpdate={this.handleUpdateRemark}
-                               handleUpdateModalVisible={this.handleUpdateModalVisible}
-                               data={updateRemarkParams}
+            <FinanceUpdateForm
+              updateModalVisible={updateModalVisible}
+              handleUpdate={this.handleUpdateRemark}
+              handleUpdateModalVisible={this.handleUpdateModalVisible}
+              data={updateRemarkParams}
             />
           </div>
         </Card>
