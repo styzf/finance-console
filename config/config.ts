@@ -105,7 +105,7 @@ export default {
         resourcePath: string;
       },
       _: string,
-      localName: string
+      localName: string,
     ) => {
       if (
         context.resourcePath.includes('node_modules') ||
@@ -139,15 +139,10 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/server': '' },
     },
-    '/api/finance': {
+    '/api/apply': {
       target: 'http://192.168.13.133:8081/',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
-    '/api/category': {
-      target: 'http://192.168.13.133:8081/',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: { '^/api/apply': '' },
     },
     '/api/user': {
       target: 'http://192.168.13.133:8082/',

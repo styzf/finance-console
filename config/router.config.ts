@@ -40,8 +40,7 @@ export default [
             path: '/',
             redirect: '/category/list',
             authority: ['admin', 'category_list'],
-          },
-          // category
+          }, // category
           {
             path: '/category',
             name: 'category',
@@ -55,8 +54,7 @@ export default [
                 authority: ['admin', 'category_list'],
               },
             ],
-          },
-          // finance
+          }, // finance
           {
             path: '/finance',
             name: 'finance',
@@ -69,13 +67,26 @@ export default [
                 component: './finance/financeList',
                 authority: ['admin', 'finance_list'],
               },
+              {
+                path: '/finance/book',
+                name: 'financeBook',
+                component: './finance/financeBook',
+                authority: ['admin'],
+              },
+              {
+                path: '/finance/book/detail/:id',
+                name: 'financeDetail',
+                component: './finance/financeBookDetail',
+                authority: ['admin'],
+                hideInMenu: true,
+              },
             ],
           },
           {
             name: 'result',
             icon: 'check-circle-o',
             path: '/result',
-            hideInMenu:true,
+            hideInMenu: true,
             routes: [
               {
                 name: 'success',
@@ -93,7 +104,7 @@ export default [
             name: 'exception',
             icon: 'warning',
             path: '/exception',
-            hideInMenu:true,
+            hideInMenu: true,
             routes: [
               {
                 name: '403',
