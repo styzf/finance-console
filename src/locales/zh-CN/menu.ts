@@ -9,6 +9,8 @@ export default {
   'menu.category.categoryList': '分类列表',
   'menu.finance': '财务管理',
   'menu.finance.financeList': '财务列表',
+  'menu.finance.financeBook': '账本管理',
+  'menu.finance.financeDetail': '账本详情',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
