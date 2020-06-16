@@ -11,6 +11,8 @@ export default {
   'menu.finance.financeList': '财务列表',
   'menu.finance.financeBook': '账本管理',
   'menu.finance.financeDetail': '账本详情',
+  'menu.users': '用户管理',
+  'menu.users.userList': '用户列表',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

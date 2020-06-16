@@ -9,9 +9,9 @@ import { connect } from 'dva';
 import { CategoryStateType } from '../../category/categoryList/model';
 import CreateForm from '../../category/categoryList/components/CreateForm';
 import UpdateForm from '../../category/categoryList/components/UpdateForm';
-import CategoryStandardTable, {
-  CategoryStandardTableColumnProps,
-} from '../../category/categoryList/components/CategoryStandardTable';
+import StandardTable, {
+  StandardTableColumnProps,
+} from '../../components/StandardTable';
 import {
   CategoryListItem,
   TableListPagination,
@@ -77,7 +77,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
   /**
    * 列的定义
    */
-  columns: CategoryStandardTableColumnProps[] = [
+  columns: StandardTableColumnProps<CategoryListItem>[] = [
     {
       title: '分类名',
       dataIndex: 'name',
@@ -378,7 +378,7 @@ class TableList extends Component<CategoryTableListProps, TableListState> {
                 </span>
               )}
             </div>
-            <CategoryStandardTable
+            <StandardTable
               selectedRows={selectedRows}
               loading={loading}
               data={data}
