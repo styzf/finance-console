@@ -82,6 +82,21 @@ export default [
               },
             ],
           },
+          // user
+          {
+            path: '/users',
+            name: 'users',
+            icon: 'table',
+            authority: ['admin', 'user'],
+            routes: [
+              {
+                path: '/users/list',
+                name: 'userList',
+                component: './user/userList',
+                authority: ['admin', 'user_list'],
+              },
+            ],
+          },
           {
             name: 'result',
             icon: 'check-circle-o',
