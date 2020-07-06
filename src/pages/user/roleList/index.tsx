@@ -84,18 +84,18 @@ class TableList extends Component<RoleTableListProps, TableListState> {
     // columns: RoleStandardTableColumnProps[] = [
   columns: StandardTableColumnProps<RoleListItem>[] = [
     {
-      title: '用户名',
-      dataIndex: 'name',
+      title: '角色名',
+      dataIndex: 'roleName',
     },
     {
-      title: '账户名',
-      dataIndex: 'Rolename',
+      title: '角色代码',
+      dataIndex: 'roleCode',
     },
     {
-      title: '性别',
+      title: '状态',
       render: text => (
         <div>
-          {text.sex === '1' ? '男' : '女'}
+          {text.sex === '1' ? '启用' : '禁用'}
         </div>
       )
     },
@@ -342,13 +342,13 @@ class TableList extends Component<RoleTableListProps, TableListState> {
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={4} sm={24}>
-            <FormItem label="用户名">
-              {getFieldDecorator('name')(<Input placeholder="请输入"/>)}
+            <FormItem label="角色名">
+              {getFieldDecorator('roleName')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
           <Col md={4} sm={24}>
-            <FormItem label="账户名">
-              {getFieldDecorator('Rolename')(<Input placeholder="请输入"/>)}
+            <FormItem label="角色代码">
+              {getFieldDecorator('roleCode')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
           <Col md={4} sm={24}>
