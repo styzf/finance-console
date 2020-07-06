@@ -95,7 +95,7 @@ class TableList extends Component<RoleTableListProps, TableListState> {
       title: '状态',
       render: text => (
         <div>
-          {text.sex === '1' ? '启用' : '禁用'}
+          {text.status === '1' ? '启用' : '禁用'}
         </div>
       )
     },
