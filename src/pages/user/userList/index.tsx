@@ -89,7 +89,7 @@ class TableList extends Component<UserTableListProps, TableListState> {
     },
     {
       title: '账户名',
-      dataIndex: 'username',
+      dataIndex: 'userName',
     },
     {
       title: '性别',
