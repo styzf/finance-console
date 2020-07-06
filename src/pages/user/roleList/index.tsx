@@ -7,7 +7,7 @@ import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import {SorterResult} from 'antd/es/table';
 import {connect} from 'dva';
 import {RoleStateType} from './model';
-// import CreateForm from './components/CreateForm';
+import CreateForm from './components/CreateForm';
 // import UpdateForm from './components/UpdateForm';
 // import RoleStandardTable, {
 //   RoleStandardTableColumnProps,
@@ -239,14 +239,6 @@ class TableList extends Component<RoleTableListProps, TableListState> {
   };
 
   handleModalVisible = (flag?: boolean) => {
-    if (flag) {
-      const {dispatch} = this.props;
-      dispatch({
-        type: 'categoryListTableList/getTree',
-        payload: {parentId : 12}
-      });
-    }
-
     this.setState({
       modalVisible: !!flag,
     });
@@ -285,31 +277,24 @@ class TableList extends Component<RoleTableListProps, TableListState> {
     });
   };
 
-  // handleAdd = (fields: { email: string,
-  //   name: string,
-  //   RoleName: string ,
-  //   password: string,
-  //   password2: string,
-  //   phone: string }) => {
-  //   const {dispatch} = this.props;
-  //   dispatch({
-  //     type: namespace + '/add',
-  //     payload: {
-  //       name: fields.name,
-  //       email: fields.email,
-  //       RoleName: fields.RoleName,
-  //       password: fields.password,
-  //       password2: fields.password2,
-  //       phone: fields.phone,
-  //     },
-  //     callback: () => {
-  //       this.handleInit();
-  //     },
-  //   });
-  //
-  //   message.success('添加成功');
-  //   this.handleModalVisible();
-  // };
+  handleAdd = (fields: {roleName: string,
+    roleCode: string}) => {
+    const {dispatch} = this.props;
+    dispatch({
+      type: namespace + '/add',
+      payload: {
+        roleName: fields.roleName,
+        roleCode: fields.roleCode,
+        status: 1,
+      },
+      callback: () => {
+        this.handleInit();
+      },
+    });
+
+    message.success('添加成功');
+    this.handleModalVisible();
+  };
 
   // handleUpdate = (fields: { name: string; parentId: number; RoleKey: string }) => {
   //   const {dispatch} = this.props;
@@ -377,12 +362,12 @@ class TableList extends Component<RoleTableListProps, TableListState> {
     } = this.props;
 
     // const {selectedRows, modalVisible, updateModalVisible, updateData} = this.state;
-    const { selectedRows} = this.state;
+    const {modalVisible, selectedRows} = this.state;
 
-    // const parentMethods = {
-    //   handleAdd: this.handleAdd,
-    //   handleModalVisible: this.handleModalVisible,
-    // };
+    const parentMethods = {
+      handleAdd: this.handleAdd,
+      handleModalVisible: this.handleModalVisible,
+    };
 
     // const updateMethods = {
     //   handleUpdate: this.handleUpdate,
@@ -422,7 +407,7 @@ class TableList extends Component<RoleTableListProps, TableListState> {
             {/*/>*/}
           </div>
         </Card>
-       {/* <CreateForm {...parentMethods} modalVisible={modalVisible}/>*/}
+        <CreateForm {...parentMethods} modalVisible={modalVisible}/>
        {/* <UpdateForm
           {...updateMethods}
           updateModalVisible={updateModalVisible}
