@@ -1,7 +1,7 @@
 export default {
   'user-register-result.login.userName': '用户名',
-  'user-register-result.login.password': '密码',
-  'user-register-result.login.message-invalid-credentials': '账户或密码错误（admin/ant.design）',
+  'user-register-result.login.password': '密码: 111111',
+  'user-register-result.login.message-invalid-credentials': '账户或密码错误（admin）',
   'user-register-result.login.message-invalid-verification-code': '验证码错误',
   'user-register-result.login.tab-login-credentials': '账户密码登录',
   'user-register-result.login.tab-login-mobile': '手机号登录',

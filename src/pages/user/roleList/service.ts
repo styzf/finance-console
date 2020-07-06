@@ -1,7 +1,7 @@
 import request from '@/utils/request';
-import {UserListItem, TableListParams} from './data.d';
+import {RoleListItem, TableListParams} from './data.d';
 
-export async function queryUser(params: TableListParams) {
+export async function queryRole(params: TableListParams) {
   let data = request('/api/user/page', {
     params,
   });
@@ -9,14 +9,14 @@ export async function queryUser(params: TableListParams) {
   return data;
 }
 
-export async function removeUser(params: TableListParams) {
+export async function removeRole(params: TableListParams) {
   return request('/api/user/remove', {
     method: 'DELETE',
-    data: params.userIds,
+    data: params.RoleIds,
   });
 }
 
-export async function addUser(params: TableListParams) {
+export async function addRole(params: TableListParams) {
   return request('/api/user/save', {
     method: 'POST',
     data: {
@@ -26,7 +26,7 @@ export async function addUser(params: TableListParams) {
   });
 }
 
-export async function updateUser(params: UserListItem) {
+export async function updateRole(params: RoleListItem) {
   return request('/api/apply/category', {
     method: 'PUT',
     data: {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormComponentProps } from 'antd/es/form';
 import classNames from 'classnames';
 import LoginContext, { LoginContextProps } from './LoginContext';
-import LoginItem, { LoginItemProps } from './LoginItem';
+import LoginItem, {LoginItemProps, LoginItemType} from './LoginItem';
 
 import LoginSubmit from './LoginSubmit';
 import LoginTab from './LoginTab';
@@ -118,8 +118,10 @@ class Login extends Component<LoginProps, LoginState> {
     const { type, tabs = [] } = this.state;
     const TabChildren: React.ReactComponentElement<LoginTab>[] = [];
     const otherChildren: React.ReactElement<any>[] = [];
+
     React.Children.forEach(
       children,
+      // @ts-ignore
       (child: React.ReactComponentElement<LoginTab> | React.ReactElement<any>) => {
         if (!child) {
           return;

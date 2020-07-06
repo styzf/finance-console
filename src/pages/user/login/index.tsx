@@ -137,7 +137,7 @@ class Login extends Component<LoginProps,
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({id: 'user-login.login.password'})}: 111111`}
+              placeholder={`${formatMessage({id: 'user-login.login.password'})}`}
               rules={[
                 {
                   required: true,
