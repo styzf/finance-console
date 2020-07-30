@@ -95,6 +95,12 @@ export default [
                 component: './user/userList',
                 authority: ['admin', 'user_list'],
               },
+              {
+                path: '/users/role',
+                name: 'roleList',
+                component: './user/roleList',
+                authority: ['admin', 'role_list'],
+              },
             ],
           },
           {
