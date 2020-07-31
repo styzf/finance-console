@@ -14,6 +14,7 @@ export default {
   'menu.users': '用户管理',
   'menu.users.userList': '用户列表',
   'menu.users.roleList': '角色列表',
+  'menu.users.permissionList': '权限列表',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',

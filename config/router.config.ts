@@ -101,6 +101,12 @@ export default [
                 component: './user/roleList',
                 authority: ['admin', 'role_list'],
               },
+              {
+                path: '/users/permission',
+                name: 'permissionList',
+                component: './user/permissionList',
+                authority: ['admin', 'permission_list'],
+              },
             ],
           },
           {
